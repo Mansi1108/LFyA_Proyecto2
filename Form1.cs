@@ -69,10 +69,21 @@ namespace LFyA_Proyecto2
             palabra = textBox1.Text.ToCharArray().Select(c => c.ToString()).ToArray();
 
 
+            // VERIFICAR QUE LA PALABRA ESTE EN EL ALFABETO
+            for (int i = 0; i < alfabeto.Length; i++)
+            {
+                for (int j = 0; j < palabra.Length; j++)
+                {
+                    if (!alfabeto[i].Contains(palabra[j]))
+                    {
+                        palabra = "NO ACEPTADA".ToCharArray().Select(c => c.ToString()).ToArray(); 
+                    }
+                }
+            }
+
             // LLENAR CINTA
             DataGridViewColumn columna;
-
-                for (int i = 0; i <= palabra.Length; i++)
+            for (int i = 0; i <= palabra.Length; i++)
                 {
                     columna = new DataGridViewColumn();
                     columna.CellTemplate = new DataGridViewTextBoxCell();
@@ -85,20 +96,6 @@ namespace LFyA_Proyecto2
             {
                 dataGridView1[i, 0].Value = palabra[i].ToString();
             }
-
-            // VERIFICAR QUE LA PALABRA ESTE EN EL ALFABETO
-            for (int i = 0; i < alfabeto.Length; i++)
-            {
-                for (int j = 0; j < palabra.Length; j++)
-                {
-                    if (!alfabeto[i].Contains(palabra[j]))
-                    {
-                        textBox2.Text = "NO ACEPTADA";
-                    }
-                }
-            }
-
-
 
         }
 
