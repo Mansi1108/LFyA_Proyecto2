@@ -12,7 +12,7 @@ namespace LFyA_Proyecto2
         public string caracter;
         public string nuevoCaracter;
         public int posicion;
-
+        public string estadoD; 
         public Cabezal() {}
 
     }
