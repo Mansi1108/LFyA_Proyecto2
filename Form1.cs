@@ -146,12 +146,12 @@ namespace LFyA_Proyecto2
 
 
         }
+        
+
 
         public void Recorrido (Cabezal cabezal, bool flag2)
         {
             int posanterior = 0;
-            bool flag = true;
-            string ad = "";
             while (flag2)
             {
                 cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
@@ -163,7 +163,8 @@ namespace LFyA_Proyecto2
                             if (transiciones[contador].caracterleido == cabezal.caracter)
                             {
                                 posanterior = cabezal.posicion;
-                                switch (transiciones[contador].movimiento.ToUpper())
+                                dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.White;
+                            switch (transiciones[contador].movimiento.ToUpper())
                                 {
                                     case "R":
                                         cabezal.posicion++;
@@ -185,9 +186,10 @@ namespace LFyA_Proyecto2
                                     default:
                                         break;
                                 }
-                                Thread.Sleep(500);
+                                
                                 cabezal.estadoD = transiciones[contador].estadofinal;
                                 cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+                                dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.Yellow;
                                 dataGridView1[posanterior, 0].Value = transiciones[contador].caracteraescribir.ToString();
                                 textBox3.Text = cabezal.estadoD;
                             }
@@ -216,6 +218,138 @@ namespace LFyA_Proyecto2
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
+        }
+        int paso;
+
+        public void RecorridoPaso(Cabezal cabezal)
+        {
+            cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+            for (int contador = 0; contador < transiciones.Count; contador++)
+            {
+
+                if (cabezal.estadoD == transiciones[contador].estadoinicial)
+                {
+                    if (transiciones[contador].caracterleido == cabezal.caracter)
+                    {
+                        paso = cabezal.posicion;
+                        dataGridView1.Columns[paso].DefaultCellStyle.BackColor = Color.Yellow;
+                        switch (transiciones[contador].movimiento.ToUpper())
+                        {
+                            case "R":
+                                cabezal.posicion++;
+                                break;
+                            case "D":
+                                cabezal.posicion++;
+                                break;
+                            case "L":
+                                cabezal.posicion--;
+                                break;
+                            case "I":
+                                cabezal.posicion--;
+                                break;
+                            case "0":
+                                break;
+                            case "P":
+                                break;
+                            default:
+                                break;
+                        }
+
+                        cabezal.estadoD = transiciones[contador].estadofinal;
+                        cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+                        dataGridView1.Columns[paso].DefaultCellStyle.BackColor = Color.White;
+                        dataGridView1[paso, 0].Value = transiciones[contador].caracteraescribir.ToString();
+                        textBox3.Text = cabezal.estadoD;
+                    }
+                }
+
+
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // CONVERTIR PALABRA EN ARREGLO
+            palabra = textBox1.Text.ToCharArray().Select(c => c.ToString()).ToArray();
+
+            bool aceptada = true;
+            // VERIFICAR QUE LA PALABRA ESTE EN EL ALFABETO
+            for (int i = 0; i < alfabeto.Length; i++)
+            {
+                for (int j = 0; j < palabra.Length; j++)
+                {
+                    if (!alfabeto[i].Contains(palabra[j]))
+                    {
+                        palabra = "NO ACEPTADA".ToCharArray().Select(c => c.ToString()).ToArray();
+                        aceptada = false;
+                        i = alfabeto.Length;
+                        j = palabra.Length;
+                    }
+                }
+            }
+
+            DataGridViewColumn columna;
+            if (aceptada)
+            {
+                // LLENAR CINTA               
+                for (int i = 0; i <= palabra.Length + 1; i++)
+                {
+                    columna = new DataGridViewColumn();
+                    columna.CellTemplate = new DataGridViewTextBoxCell();
+                    columna.Width = 40;
+                    columna.Resizable = DataGridViewTriState.False;
+                    dataGridView1.Columns.Add(columna);
+                }
+
+                dataGridView1[0, 0].Value = "_";
+                for (int i = 1; i <= palabra.Length; i++)
+                {
+                    dataGridView1[i, 0].Value = palabra[i - 1].ToString();
+                }
+                dataGridView1[palabra.Length + 1, 0].Value = "_";
+
+
+                // GUARDAR TRANSICIONES
+                Cabezal cabezal = new Cabezal();
+
+                foreach (var pasitos in Pasos)
+                {
+                    Transiciones transicionesi = new Transiciones();
+                    string[] estados = (pasitos.Split(','));
+                    transicionesi.estadoinicial = estados[0];
+                    transicionesi.caracterleido = estados[1];
+                    transicionesi.estadofinal = estados[2];
+                    transicionesi.caracteraescribir = estados[3];
+                    transicionesi.movimiento = estados[4];
+                    transiciones.Add(transicionesi);
+                }
+
+                cabezal.posicion = 0;
+                cabezal.caracter = dataGridView1[0, 0].Value.ToString();
+                cabezal.estadoD = estadoinicial;
+                RecorridoPaso(cabezal);
+                dataGridView1.Columns[paso].DefaultCellStyle.BackColor = Color.Yellow;
+
+            }
+            else
+            {
+                for (int i = 0; i <= palabra.Length + 1; i++)
+                {
+                    columna = new DataGridViewColumn();
+                    columna.CellTemplate = new DataGridViewTextBoxCell();
+                    columna.Width = 40;
+                    columna.Resizable = DataGridViewTriState.False;
+                    dataGridView1.Columns.Add(columna);
+                }
+
+                dataGridView1[0, 0].Value = "_";
+                for (int i = 1; i <= palabra.Length; i++)
+                {
+                    dataGridView1[i, 0].Value = palabra[i - 1].ToString();
+                }
+                dataGridView1[palabra.Length + 1, 0].Value = "_";
+            }
         }
     }
 }
