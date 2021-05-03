@@ -43,7 +43,7 @@ namespace LFyA_Proyecto2
                 estadoinicial=instrucciones[1].Replace("\r", "");
                 alfabeto = instrucciones[2].Split(',');
                 Pasos = new List<string>();
-                for (int i = 3; i < instrucciones.Length-1; i++)
+                for (int i = 3; i < instrucciones.Length; i++)
                 {
                     Pasos.Add(instrucciones[i].Replace("\r", ""));
                 }
@@ -82,8 +82,6 @@ namespace LFyA_Proyecto2
                 }
             }
 
-
-
             DataGridViewColumn columna;
             if (aceptada)
             {
@@ -121,7 +119,6 @@ namespace LFyA_Proyecto2
                     transiciones.Add(transicionesi);
                 }
 
-
                 cabezal.posicion = 0;
                 dataGridView1.Rows[cabezal.posicion].Cells[0].Style.BackColor = Color.Yellow;
                 cabezal.caracter = dataGridView1[0, 0].Value.ToString();
@@ -151,57 +148,63 @@ namespace LFyA_Proyecto2
 
         public void Recorrido (Cabezal cabezal, bool flag2)
         {
-            if (flag2)
+            int posanterior = 0;
+            bool flag = true;
+            string ad = "";
+            while (flag2)
             {
                 cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
-                bool flag = true;
-                int contador = 0;
-                
-                while (flag)
-                {
-                    if (cabezal.estadoD == transiciones[contador].estadoinicial)
+                    for (int contador = 0; contador < transiciones.Count ; contador++)
                     {
-                        if (transiciones[contador].caracterleido == cabezal.caracter)
+
+                        if (cabezal.estadoD == transiciones[contador].estadoinicial)
                         {
-                            switch (transiciones[contador].movimiento.ToUpper())
+                            if (transiciones[contador].caracterleido == cabezal.caracter)
                             {
-                                case "R":
-                                    cabezal.posicion++;
-                                    break;
-                                case "D":
-                                    cabezal.posicion++;
-                                    break;
-                                case "L":
-                                    cabezal.posicion--;
-                                    break;
-                                case "I":
-                                    cabezal.posicion--;
-                                    break;
-                                case "0":
-                                    break;
-                                case "P":
-                                    flag2 = false;
-                                    break;
-                                default:
-                                    break;
+                                posanterior = cabezal.posicion;
+                                switch (transiciones[contador].movimiento.ToUpper())
+                                {
+                                    case "R":
+                                        cabezal.posicion++;
+                                        break;
+                                    case "D":
+                                        cabezal.posicion++;
+                                        break;
+                                    case "L":
+                                        cabezal.posicion--;
+                                        break;
+                                    case "I":
+                                        cabezal.posicion--;
+                                        break;
+                                    case "0":
+                                        break;
+                                    case "P":
+                                        flag2 = false;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                Thread.Sleep(500);
+                                cabezal.estadoD = transiciones[contador].estadofinal;
+                                cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+                                dataGridView1[posanterior, 0].Value = transiciones[contador].caracteraescribir.ToString();
+                                textBox3.Text = cabezal.estadoD;
                             }
-                            //dataGridView1.Rows[cabezal.posicion].Cells[0].Style.BackColor = Color.Yellow;
-                            Thread.Sleep(500);
-                            cabezal.estadoD = transiciones[contador].estadofinal;
-                            dataGridView1[cabezal.posicion, 0].Value = transiciones[contador].caracteraescribir;
-                            flag = false;
-                            textBox3.Text = cabezal.estadoD;                        
                         }
+
+                    
                     }
-                    if (contador == transiciones.Count-1)
-                    {
-                        flag = false;
-                    }
-                    contador++;
+                     
+                
+       
+                if (cabezal.posicion == dataGridView1.Columns.Count-1)
+                {
+                    flag2 = false;
                 }
-                Recorrido(cabezal, flag2);
+
             }
-            
+           
+
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
