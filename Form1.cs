@@ -19,10 +19,11 @@ namespace LFyA_Proyecto2
         }
         public List<string> Pasos;
         public string[] alfabeto;
-        string estadoinicial;
-        string numestados;
+        public string estadoinicial;
+        public string numestados;
+        public List<Transiciones> transiciones = new List<Transiciones>();
 
-        string[] palabra;
+        public string[] palabra;
 
 
         private void button1_Click(object sender, EventArgs e)
@@ -83,7 +84,7 @@ namespace LFyA_Proyecto2
 
             // LLENAR CINTA
             DataGridViewColumn columna;
-            for (int i = 0; i <= palabra.Length; i++)
+            for (int i = 0; i <= palabra.Length+1; i++)
                 {
                     columna = new DataGridViewColumn();
                     columna.CellTemplate = new DataGridViewTextBoxCell();
@@ -92,9 +93,67 @@ namespace LFyA_Proyecto2
                     dataGridView1.Columns.Add(columna);
                 }
 
-            for (int i = 0; i < palabra.Length; i++)
+            dataGridView1[0, 0].Value = "_";
+            for (int i = 1; i <= palabra.Length; i++)
             {
-                dataGridView1[i, 0].Value = palabra[i].ToString();
+                dataGridView1[i, 0].Value = palabra[i-1].ToString();
+            }
+            dataGridView1[palabra.Length+1, 0].Value = "_";
+
+
+            
+            // GUARDAR TRANSICIONES
+            Cabezal cabezal = new Cabezal();
+            Transiciones transicionesi = new Transiciones();
+            foreach (var pasitos in Pasos)
+            {
+                string[] estados = (pasitos.Split(','));
+                transicionesi.estadoinicial = estados[0];
+                transicionesi.caracterleido = estados[1];
+                transicionesi.estadofinal = estados[2];
+                transicionesi.caracteraescribir = estados[3];
+                transicionesi.movimiento = estados[4];
+                transiciones.Add(transicionesi);
+            }
+
+
+            cabezal.posicion = 0;
+            bool encontrado = true;
+            int contador = 0;
+            bool flag = true;
+            cabezal.caracter = dataGridView1[0,0].Value.ToString();
+            while (encontrado)
+            {
+                if (contador+1 > transiciones.Count) 
+                {
+                    encontrado = false;
+                }
+                if (transiciones[contador].estadoinicial == estadoinicial && transiciones[contador].caracterleido == cabezal.caracter)
+                {
+                    switch (transiciones[contador].movimiento.ToUpper())
+                    {
+                        case "R":
+                            cabezal.posicion++;
+                            break;
+                        case "D":
+                            cabezal.posicion++;
+                            break;
+                        case "L":
+                            cabezal.posicion--;
+                            break;
+                        case "I":
+                            cabezal.posicion--;
+                            break;
+                        case "0":
+                            break;
+                        case "P":
+                            break;
+                        default:
+                            break;
+                    }
+                    dataGridView1[cabezal.posicion, 0].Value = transiciones[contador].caracteraescribir;
+                    encontrado = false;
+                }
             }
 
         }
