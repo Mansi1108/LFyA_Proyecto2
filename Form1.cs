@@ -103,7 +103,6 @@ namespace LFyA_Proyecto2
                 dataGridView1[palabra.Length + 1, 0].Value = "_";
 
 
-
                 // GUARDAR TRANSICIONES
                 Cabezal cabezal = new Cabezal();
 
@@ -126,23 +125,25 @@ namespace LFyA_Proyecto2
                 cabezal.estadoD = estadoinicial;
                 Recorrido(cabezal, true);
             }
-
-            // LLENAR CINTA
-            for (int i = 0; i <= palabra.Length + 1; i++)
+            else
             {
-                columna = new DataGridViewColumn();
-                columna.CellTemplate = new DataGridViewTextBoxCell();
-                columna.Width = 40;
-                columna.Resizable = DataGridViewTriState.False;
-                dataGridView1.Columns.Add(columna);
+                for (int i = 0; i <= palabra.Length + 1; i++)
+                {
+                    columna = new DataGridViewColumn();
+                    columna.CellTemplate = new DataGridViewTextBoxCell();
+                    columna.Width = 40;
+                    columna.Resizable = DataGridViewTriState.False;
+                    dataGridView1.Columns.Add(columna);
+                }
+
+                dataGridView1[0, 0].Value = "_";
+                for (int i = 1; i <= palabra.Length; i++)
+                {
+                    dataGridView1[i, 0].Value = palabra[i - 1].ToString();
+                }
+                dataGridView1[palabra.Length + 1, 0].Value = "_";
             }
 
-            dataGridView1[0, 0].Value = "_";
-            for (int i = 1; i <= palabra.Length; i++)
-            {
-                dataGridView1[i, 0].Value = palabra[i - 1].ToString();
-            }
-            dataGridView1[palabra.Length + 1, 0].Value = "_";
 
         }
 
