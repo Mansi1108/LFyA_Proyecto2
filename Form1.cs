@@ -24,6 +24,7 @@ namespace LFyA_Proyecto2
         public string estadoinicial;
         public string numestados;
         public List<Transiciones> transiciones = new List<Transiciones>();
+       
 
         public string[] palabra;
         private System.Timers.Timer aTimer;
@@ -86,7 +87,7 @@ namespace LFyA_Proyecto2
             if (aceptada)
             {
                 // LLENAR CINTA               
-                for (int i = 0; i <= palabra.Length + 1; i++)
+                for (int i = 0; i <= palabra.Length + 5; i++)
                 {
                     columna = new DataGridViewColumn();
                     columna.CellTemplate = new DataGridViewTextBoxCell();
@@ -100,7 +101,11 @@ namespace LFyA_Proyecto2
                 {
                     dataGridView1[i, 0].Value = palabra[i - 1].ToString();
                 }
-                dataGridView1[palabra.Length + 1, 0].Value = "_";
+                for (int i = palabra.Length+1; i <= palabra.Length+5; i++)
+                {
+                    dataGridView1[i, 0].Value = "_";
+                }
+                
 
 
                 // GUARDAR TRANSICIONES
@@ -119,9 +124,8 @@ namespace LFyA_Proyecto2
                 }
 
                 cabezal.posicion = 0;
-                dataGridView1.Rows[cabezal.posicion].Cells[0].Style.BackColor = Color.Yellow;
+                //dataGridView1.Rows[cabezal.posicion].Cells[0].Style.BackColor = Color.Yellow;
                 cabezal.caracter = dataGridView1[0, 0].Value.ToString();
-                Thread.Sleep(2000);
                 cabezal.estadoD = estadoinicial;
                 Recorrido(cabezal, true);
             }
@@ -152,48 +156,61 @@ namespace LFyA_Proyecto2
         public void Recorrido (Cabezal cabezal, bool flag2)
         {
             int posanterior = 0;
+            int contadorenciclado = 0;
             while (flag2)
             {
+                
                 cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
                     for (int contador = 0; contador < transiciones.Count ; contador++)
                     {
+                     
+                    if (cabezal.estadoD == transiciones[contador].estadoinicial && transiciones[contador].caracterleido == cabezal.caracter)
+                    {
 
-                        if (cabezal.estadoD == transiciones[contador].estadoinicial)
+                        posanterior = cabezal.posicion;
+                        dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.White;
+                        switch (transiciones[contador].movimiento.ToUpper())
                         {
-                            if (transiciones[contador].caracterleido == cabezal.caracter)
-                            {
-                                posanterior = cabezal.posicion;
-                                dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.White;
-                            switch (transiciones[contador].movimiento.ToUpper())
-                                {
-                                    case "R":
-                                        cabezal.posicion++;
-                                        break;
-                                    case "D":
-                                        cabezal.posicion++;
-                                        break;
-                                    case "L":
-                                        cabezal.posicion--;
-                                        break;
-                                    case "I":
-                                        cabezal.posicion--;
-                                        break;
-                                    case "0":
-                                        break;
-                                    case "P":
-                                        flag2 = false;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                
-                                cabezal.estadoD = transiciones[contador].estadofinal;
-                                cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
-                                dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.Yellow;
-                                dataGridView1[posanterior, 0].Value = transiciones[contador].caracteraescribir.ToString();
-                                textBox3.Text = cabezal.estadoD;
-                            }
+                            case "R":
+                                cabezal.posicion++;
+                                break;
+                            case "D":
+                                cabezal.posicion++;
+                                break;
+                            case "L":
+                                cabezal.posicion--;
+                                break;
+                            case "I":
+                                cabezal.posicion--;
+                                break;
+                            case "0":
+                                break;
+                            case "P":
+                                flag2 = false;
+                                break;
+                            default:
+                                break;
                         }
+
+                        cabezal.estadoD = transiciones[contador].estadofinal;
+                        cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+
+                        dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.White;
+                        dataGridView1.Columns[cabezal.posicion].DefaultCellStyle.BackColor = Color.Yellow;
+
+                        dataGridView1[posanterior, 0].Value = transiciones[contador].caracteraescribir.ToString();
+                        textBox3.Text = cabezal.estadoD;
+
+                    }
+                    else {
+                        contadorenciclado++;
+                        if (contadorenciclado==500)
+                        {
+                            MessageBox.Show("La misma instruccion se ha realizado 500 veces la maquina se ha detenido revise la maquina");
+                            textBox2.Text = "Error";
+                            flag2 = false;
+                        }
+                    }
 
                     
                     }
