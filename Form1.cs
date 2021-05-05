@@ -19,6 +19,8 @@ namespace LFyA_Proyecto2
         {
             InitializeComponent();
         }
+
+
         private List<string> Pasos;
         private string[] alfabeto;
         private string estadoinicial;
@@ -26,6 +28,37 @@ namespace LFyA_Proyecto2
         private List<Transiciones> transiciones = new List<Transiciones>();
         private Cabezal cabezal = new Cabezal();
         private string[] palabra;
+        private bool PrimeraVuelta = true;
+        private int paso;
+
+        private void ResetCompleto() {
+            Pasos = new List<String>();
+            alfabeto = null;
+            estadoinicial = null;
+            numestados = null;
+            transiciones = new List<Transiciones>();
+            cabezal = new Cabezal();
+            palabra = null;
+            PrimeraVuelta = true;
+            paso = 0;
+            dataGridView1.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+        }
+
+        private void ResetParcial() {
+            transiciones = new List<Transiciones>();
+            cabezal = new Cabezal();
+            PrimeraVuelta = true;
+            paso = 0;
+            dataGridView1.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -251,7 +284,7 @@ namespace LFyA_Proyecto2
         {
 
         }
-        private int paso;
+        
 
         public void RecorridoPaso(Cabezal cabezal)
         {
@@ -304,7 +337,7 @@ namespace LFyA_Proyecto2
             }
 
         }
-        private bool PrimeraVuelta = true;
+        
         private void button2_Click(object sender, EventArgs e)
         {
             if (PrimeraVuelta)
@@ -409,6 +442,18 @@ namespace LFyA_Proyecto2
             bEjecutar.Enabled = false;
             bPaso.Enabled = false;
 
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            ResetCompleto();
+            MessageBox.Show("El programa se ha reiniciado, ingrese un nuevo archivo");
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            ResetParcial();
+            MessageBox.Show("Se sigue utilizando la misma máquina pero puede añadir una nueva palabra");
         }
     }
 }
