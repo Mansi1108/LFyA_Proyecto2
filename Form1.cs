@@ -165,6 +165,14 @@ namespace LFyA_Proyecto2
                     if (cabezal.estadoD == transiciones[contador].estadoinicial && transiciones[contador].caracterleido == cabezal.caracter)
                     {
 
+                        DataGridViewColumn columna;
+                        columna = new DataGridViewColumn();
+                        columna.CellTemplate = new DataGridViewTextBoxCell();
+                        columna.Width = 40;
+                        columna.Resizable = DataGridViewTriState.False;
+                        dataGridView1.Columns.Add(columna);
+                        dataGridView1[dataGridView1.ColumnCount - 1, 0].Value = "_";
+
                         posanterior = cabezal.posicion;
                         dataGridView1.Columns[posanterior].DefaultCellStyle.BackColor = Color.White;
                         switch (transiciones[contador].movimiento.ToUpper())
@@ -185,6 +193,7 @@ namespace LFyA_Proyecto2
                                 break;
                             case "P":
                                 flag2 = false;
+                                textBox2.Text = "Estado halted";
                                 break;
                             default:
                                 break;
@@ -204,8 +213,15 @@ namespace LFyA_Proyecto2
                         contadorenciclado++;
                         if (contadorenciclado==500)
                         {
-                            MessageBox.Show("La misma instruccion se ha realizado 500 veces la maquina se ha detenido revise la maquina");
-                            textBox2.Text = "Error";
+                            if (cabezal.caracter != "_")
+                            {
+                                MessageBox.Show("La misma instruccion se ha realizado 500 veces la maquina se ha detenido revise la maquina");
+                                textBox2.Text = "Error";
+                            }
+                            else {
+                                MessageBox.Show("La misma instruccion se ha realizado 500 veces la maquina se ha detenido revise la maquina, se considera aceptada");
+                                textBox2.Text = "Revisar maquina";
+                            }
                             flag2 = false;
                         }
                     }
@@ -218,6 +234,7 @@ namespace LFyA_Proyecto2
                 if (cabezal.posicion == dataGridView1.Columns.Count-1)
                 {
                     flag2 = false;
+                    MessageBox.Show("Se ha movido repetidas veces en posiciones vacías");
                 }
 
             }
@@ -246,6 +263,7 @@ namespace LFyA_Proyecto2
                 {
                     if (transiciones[contador].caracterleido == cabezal.caracter)
                     {
+
                         paso = cabezal.posicion;
                         //dataGridView1.Columns[paso].DefaultCellStyle.BackColor = Color.Yellow;
                         switch (transiciones[contador].movimiento.ToUpper())
@@ -265,6 +283,7 @@ namespace LFyA_Proyecto2
                             case "0":
                                 break;
                             case "P":
+                                textBox2.Text = "Estado halted";
                                 break;
                             default:
                                 break;
@@ -382,6 +401,14 @@ namespace LFyA_Proyecto2
                 dataGridView1[dataGridView1.ColumnCount - 1, 0].Value = "_";
                 RecorridoPaso(cabezal);
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Se ha detenido la ejecución");
+            bEjecutar.Enabled = false;
+            bPaso.Enabled = false;
+
         }
     }
 }
