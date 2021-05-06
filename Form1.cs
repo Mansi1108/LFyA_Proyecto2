@@ -289,14 +289,14 @@ namespace LFyA_Proyecto2
         public void RecorridoPaso(Cabezal cabezal)
         {
             cabezal.caracter = dataGridView1[cabezal.posicion, 0].Value.ToString();
+            bool encontrado = false;
             for (int contador = 0; contador < transiciones.Count; contador++)
             {
 
-                if (cabezal.estadoD == transiciones[contador].estadoinicial)
+                if (cabezal.estadoD == transiciones[contador].estadoinicial && transiciones[contador].caracterleido == cabezal.caracter)
                 {
-                    if (transiciones[contador].caracterleido == cabezal.caracter)
-                    {
 
+                    encontrado = true;
                         paso = cabezal.posicion;
                         //dataGridView1.Columns[paso].DefaultCellStyle.BackColor = Color.Yellow;
                         switch (transiciones[contador].movimiento.ToUpper())
@@ -330,11 +330,15 @@ namespace LFyA_Proyecto2
 
                         dataGridView1[paso, 0].Value = transiciones[contador].caracteraescribir.ToString();
                         textBox3.Text = cabezal.estadoD;
-                    }
+                        break;
+                    
                 }
 
-
+                
             }
+
+            if (!encontrado)
+                MessageBox.Show("La maquina no pudo encontrar el siguiente paso");
 
         }
         
